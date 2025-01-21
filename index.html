@@ -10,15 +10,19 @@
         text-align: center;
         margin: 0;
         padding: 0;
-        background: #111111; /* Darker background to make colors pop */
-        color: #ffffff; /* Light text for readability */
+        background: #111111;
+        color: #ffffff;
+      }
+
+      .btn {
+        font-family: "Press Start 2P", cursive, sans-serif;
       }
       .container {
         max-width: 800px;
         margin: 50px auto;
         padding: 30px;
-        background: #333333; /* Dark background to mimic game consoles */
-        border: 5px solid #ffcc00; /* Yellow border for a Game Boy/Gameboy Color feel */
+        background: #333333;
+        border: 5px solid #ffcc00;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
         border-radius: 15px;
       }
@@ -35,7 +39,7 @@
       }
       .arcade-frame {
         padding: 20px;
-        background: #222222; /* Frame for arcade look */
+        background: #222222;
         border: 4px solid #ffcc00;
         border-radius: 10px;
         margin-bottom: 30px;
@@ -46,7 +50,7 @@
       }
       .question {
         font-size: 2.2em;
-        color: #00ff00; /* Neon green text */
+        color: #00ff00;
         text-shadow: 1px 1px 5px #ff0000;
         margin-bottom: 10px;
       }
@@ -106,6 +110,11 @@
         font-size: 1.5em;
         color: #00ff00;
       }
+      .explanation {
+        font-size: 1.2em;
+        color: #ffcc00;
+        margin-top: 20px;
+      }
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -140,8 +149,10 @@
       </div>
 
       <div class="scoreboard">
-        <p>Score: <span id="score">0</span> / 8</p>
+        <p>Score: <span id="score">0</span> / 10</p>
       </div>
+
+      <div class="explanation" id="explanation"></div>
     </div>
 
     <script>
@@ -173,25 +184,39 @@
         },
         {
           type: "fun",
-          question: "Bakit laging nauuna ang manok kaysa itlog?",
+          question: "What did Anthony miss?",
           pattern: "",
-          options: [
-            "Tradisyon",
-            "Chicken wins",
-            "May balak si chicken",
-            "Ikaw na bahala",
-          ],
+          options: ["Sweater", "Being Held", "My Body", "Naubos yung amoy"],
           correct: 2,
-          explanation: "May balak si chicken (Filipino humor on decisiveness).",
+          explanation:
+            "These are the lyrics for the hit song Sweater Memories by Maris Racal.",
         },
         {
           type: "fun",
           question:
-            "Kapag nawawala ang remote ng TV, anong unang hinahanap mo?",
+            "What are the Similarities of Sir. Salvador, Sir. Pura, and Capucao?",
           pattern: "",
-          options: ["TV", "Battery", "Couch cushions", "Nanay"],
+          options: [
+            "Professors at Partido State University",
+            "They all teach the same subject",
+            "KALBO",
+            "None of the above",
+          ],
+          correct: 0,
+          explanation: "They are professors in ParSU.",
+        },
+        {
+          type: "fun",
+          question: "What were the final words of Rizal?",
+          pattern: "",
+          options: [
+            "Risky, risky, wigi, wigi!",
+            "I shall return!",
+            "Mga Bwiset Argghhh!",
+            "Consummatum est",
+          ],
           correct: 3,
-          explanation: "Nanay usually knows everything!",
+          explanation: "Consummatum est was the final words of Jose Rizal.",
         },
         {
           type: "pattern",
@@ -210,17 +235,21 @@
           explanation: "It skips one day each time.",
         },
         {
-          type: "fun",
-          question: "Ano ang laging sinasabi ni Nanay kapag walang ulam?",
-          pattern: "",
-          options: [
-            "Mag-itlog ka na lang!",
-            "Bumili ka diyan!",
-            "Kanin is life",
-            "Kumain ka ng itlog",
-          ],
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "2, 5, 10, 17, ?",
+          options: ["24", "26", "28", "30"],
+          correct: 1,
+          explanation:
+            "The pattern increments by consecutive odd numbers (3, 5, 7...).",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "3, 9, 27, ?",
+          options: ["81", "72", "100", "54"],
           correct: 0,
-          explanation: "Classic Filipino nanay advice!",
+          explanation: "The pattern multiplies by 3 each time.",
         },
       ];
 
@@ -232,12 +261,14 @@
       const optionsEl = document.getElementById("options");
       const scoreEl = document.getElementById("score");
       const nextBtn = document.getElementById("next");
+      const explanationEl = document.getElementById("explanation");
 
       function loadChallenge() {
         const challenge = challenges[currentChallenge];
         questionEl.textContent = challenge.question;
         patternEl.textContent = challenge.pattern || "";
         optionsEl.innerHTML = "";
+        explanationEl.textContent = ""; // Reset the explanation text
         challenge.options.forEach((option, index) => {
           const btn = document.createElement("div");
           btn.classList.add("option");
@@ -251,10 +282,8 @@
         const challenge = challenges[currentChallenge];
         if (selected === challenge.correct) {
           score++;
-          alert("Correct! " + challenge.explanation);
-        } else {
-          alert(`Wrong! ${challenge.explanation}`);
         }
+        explanationEl.textContent = challenge.explanation;
         scoreEl.textContent = score;
         nextBtn.style.display = "block";
       }
@@ -273,6 +302,7 @@
         questionEl.textContent = "Game Over!";
         patternEl.textContent = "";
         optionsEl.innerHTML = `Your final score is ${score} out of ${challenges.length}.`;
+        explanationEl.textContent = "";
         nextBtn.style.display = "none";
       }
 
