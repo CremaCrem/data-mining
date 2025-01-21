@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Detective: Pattern Prediction</title>
+    <style>
+      body {
+        font-family: "Press Start 2P", cursive, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background: #111111; /* Darker background to make colors pop */
+        color: #ffffff; /* Light text for readability */
+      }
+      .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #333333; /* Dark background to mimic game consoles */
+        border: 5px solid #ffcc00; /* Yellow border for a Game Boy/Gameboy Color feel */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+        border-radius: 15px;
+      }
+      h1 {
+        color: #ffcc00;
+        text-shadow: 2px 2px 5px #ff0000;
+        font-size: 3em;
+        margin-bottom: 20px;
+      }
+      .description {
+        font-size: 1.5em;
+        color: #ffcc00;
+        margin-bottom: 20px;
+      }
+      .arcade-frame {
+        padding: 20px;
+        background: #222222; /* Frame for arcade look */
+        border: 4px solid #ffcc00;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: inline-block;
+        width: 100%;
+        max-width: 700px;
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+      }
+      .question {
+        font-size: 2.2em;
+        color: #00ff00; /* Neon green text */
+        text-shadow: 1px 1px 5px #ff0000;
+        margin-bottom: 10px;
+      }
+      .pattern {
+        font-size: 3em;
+        color: #ff0000;
+        background: #000000;
+        padding: 15px;
+        border-radius: 10px;
+        display: inline-block;
+        border: 2px solid #ff0000;
+        margin: 20px auto;
+        width: fit-content;
+      }
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .option {
+        padding: 18px 30px;
+        background: #00ff00;
+        color: #222222;
+        border-radius: 12px;
+        font-size: 1.3em;
+        cursor: pointer;
+        transition: transform 0.3s, background 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 255, 0, 0.6);
+      }
+      .option:hover {
+        background: #ffcc00;
+        transform: scale(1.1);
+        box-shadow: 0 8px 15px rgba(255, 204, 0, 0.8);
+      }
+      .btn {
+        padding: 15px 35px;
+        margin-top: 40px;
+        background: #ff0000;
+        color: white;
+        font-size: 1.4em;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .btn:hover {
+        background: #ff7300;
+        color: #000000;
+      }
+      .btn:active {
+        transform: scale(0.95);
+      }
+      .scoreboard {
+        margin-top: 30px;
+        font-size: 1.5em;
+        color: #00ff00;
+      }
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Data Detective: Retro Patterns</h1>
+      <p class="description">
+        Analyze the sequence, find the pattern, and guess what comes next! But
+        beware of the random curveballs!
+      </p>
+
+      <div id="game">
+        <div class="arcade-frame">
+          <p class="question" id="question">What comes next in the pattern?</p>
+          <p class="pattern" id="pattern">Loading pattern...</p>
+        </div>
+        <div class="options" id="options"></div>
+        <button
+          class="btn"
+          id="next"
+          style="display: none"
+          onclick="nextQuestion()"
+        >
+          Next Challenge
+        </button>
+      </div>
+
+      <div class="scoreboard">
+        <p>Score: <span id="score">0</span> / 8</p>
+      </div>
+    </div>
+
+    <script>
+      const challenges = [
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "2, 4, 6, 8, ?",
+          options: ["10", "12", "9", "11"],
+          correct: 0,
+          explanation: "The pattern increments by 2 each step.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "A, B, C, D, ?",
+          options: ["E", "F", "G", "H"],
+          correct: 0,
+          explanation: "This is a simple alphabetical sequence.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "1, 1, 2, 3, 5, ?",
+          options: ["8", "6", "7", "9"],
+          correct: 0,
+          explanation:
+            "This is the Fibonacci sequence, where each number is the sum of the previous two.",
+        },
+        {
+          type: "fun",
+          question: "Bakit laging nauuna ang manok kaysa itlog?",
+          pattern: "",
+          options: [
+            "Tradisyon",
+            "Chicken wins",
+            "May balak si chicken",
+            "Ikaw na bahala",
+          ],
+          correct: 2,
+          explanation: "May balak si chicken (Filipino humor on decisiveness).",
+        },
+        {
+          type: "fun",
+          question:
+            "Kapag nawawala ang remote ng TV, anong unang hinahanap mo?",
+          pattern: "",
+          options: ["TV", "Battery", "Couch cushions", "Nanay"],
+          correct: 3,
+          explanation: "Nanay usually knows everything!",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "10, 20, 40, 80, ?",
+          options: ["100", "120", "160", "200"],
+          correct: 2,
+          explanation: "The pattern doubles each step.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "Monday, Wednesday, Friday, ?",
+          options: ["Saturday", "Sunday", "Tuesday", "Monday"],
+          correct: 0,
+          explanation: "It skips one day each time.",
+        },
+        {
+          type: "fun",
+          question: "Ano ang laging sinasabi ni Nanay kapag walang ulam?",
+          pattern: "",
+          options: [
+            "Mag-itlog ka na lang!",
+            "Bumili ka diyan!",
+            "Kanin is life",
+            "Kumain ka ng itlog",
+          ],
+          correct: 0,
+          explanation: "Classic Filipino nanay advice!",
+        },
+      ];
+
+      let currentChallenge = 0;
+      let score = 0;
+
+      const questionEl = document.getElementById("question");
+      const patternEl = document.getElementById("pattern");
+      const optionsEl = document.getElementById("options");
+      const scoreEl = document.getElementById("score");
+      const nextBtn = document.getElementById("next");
+
+      function loadChallenge() {
+        const challenge = challenges[currentChallenge];
+        questionEl.textContent = challenge.question;
+        patternEl.textContent = challenge.pattern || "";
+        optionsEl.innerHTML = "";
+        challenge.options.forEach((option, index) => {
+          const btn = document.createElement("div");
+          btn.classList.add("option");
+          btn.textContent = option;
+          btn.onclick = () => checkAnswer(index);
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      function checkAnswer(selected) {
+        const challenge = challenges[currentChallenge];
+        if (selected === challenge.correct) {
+          score++;
+          alert("Correct! " + challenge.explanation);
+        } else {
+          alert(`Wrong! ${challenge.explanation}`);
+        }
+        scoreEl.textContent = score;
+        nextBtn.style.display = "block";
+      }
+
+      function nextQuestion() {
+        currentChallenge++;
+        if (currentChallenge < challenges.length) {
+          loadChallenge();
+          nextBtn.style.display = "none";
+        } else {
+          endGame();
+        }
+      }
+
+      function endGame() {
+        questionEl.textContent = "Game Over!";
+        patternEl.textContent = "";
+        optionsEl.innerHTML = `Your final score is ${score} out of ${challenges.length}.`;
+        nextBtn.style.display = "none";
+      }
+
+      loadChallenge();
+    </script>
+  </body>
+</html>
