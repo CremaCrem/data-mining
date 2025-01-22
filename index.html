@@ -19,46 +19,47 @@
       }
       .container {
         max-width: 800px;
-        margin: 50px auto;
-        padding: 30px;
+        margin: 20px auto;
+        padding: 20px;
         background: #333333;
         border: 5px solid #ffcc00;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
         border-radius: 15px;
+        display: none; /* Hide initially */
       }
       h1 {
         color: #ffcc00;
         text-shadow: 2px 2px 5px #ff0000;
-        font-size: 3em;
-        margin-bottom: 20px;
+        font-size: 2.5em;
+        margin-bottom: 15px;
       }
       .description {
-        font-size: 1.5em;
+        font-size: 1.2em;
         color: #ffcc00;
         margin-bottom: 20px;
       }
       .arcade-frame {
-        padding: 20px;
+        padding: 15px;
         background: #222222;
         border: 4px solid #ffcc00;
         border-radius: 10px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         display: inline-block;
         width: 100%;
         max-width: 700px;
         box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
       }
       .question {
-        font-size: 2.2em;
+        font-size: 1.8em;
         color: #00ff00;
         text-shadow: 1px 1px 5px #ff0000;
         margin-bottom: 10px;
       }
       .pattern {
-        font-size: 3em;
+        font-size: 2.5em;
         color: #ff0000;
         background: #000000;
-        padding: 15px;
+        padding: 10px;
         border-radius: 10px;
         display: inline-block;
         border: 2px solid #ff0000;
@@ -69,30 +70,32 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 20px;
+        gap: 15px;
         margin-top: 20px;
       }
       .option {
-        padding: 18px 30px;
+        padding: 15px 25px;
         background: #00ff00;
         color: #222222;
         border-radius: 12px;
-        font-size: 1.3em;
+        font-size: 1em;
         cursor: pointer;
         transition: transform 0.3s, background 0.3s;
         box-shadow: 0 4px 10px rgba(0, 255, 0, 0.6);
+        width: 100%;
+        max-width: 200px;
       }
       .option:hover {
         background: #ffcc00;
-        transform: scale(1.1);
+        transform: scale(1.05);
         box-shadow: 0 8px 15px rgba(255, 204, 0, 0.8);
       }
       .btn {
-        padding: 15px 35px;
-        margin-top: 40px;
+        padding: 12px 30px;
+        margin-top: 30px;
         background: #ff0000;
         color: white;
-        font-size: 1.4em;
+        font-size: 1em;
         border: none;
         border-radius: 15px;
         cursor: pointer;
@@ -106,14 +109,81 @@
         transform: scale(0.95);
       }
       .scoreboard {
-        margin-top: 30px;
-        font-size: 1.5em;
+        margin-top: 20px;
+        font-size: 1.2em;
         color: #00ff00;
       }
       .explanation {
-        font-size: 1.2em;
+        font-size: 1em;
         color: #ffcc00;
-        margin-top: 20px;
+        margin-top: 15px;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2em;
+        }
+        .description {
+          font-size: 1em;
+        }
+        .question {
+          font-size: 1.5em;
+        }
+        .pattern {
+          font-size: 2em;
+          padding: 8px;
+        }
+        .options {
+          gap: 10px;
+        }
+        .option {
+          font-size: 0.9em;
+          padding: 12px 20px;
+        }
+        .btn {
+          font-size: 0.9em;
+          padding: 10px 25px;
+        }
+        .scoreboard {
+          font-size: 1em;
+        }
+        .explanation {
+          font-size: 0.9em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8em;
+        }
+        .description {
+          font-size: 0.9em;
+        }
+        .question {
+          font-size: 1.2em;
+        }
+        .pattern {
+          font-size: 1.8em;
+          padding: 5px;
+        }
+        .options {
+          gap: 8px;
+        }
+        .option {
+          font-size: 0.8em;
+          padding: 10px 15px;
+        }
+        .btn {
+          font-size: 0.8em;
+          padding: 8px 20px;
+        }
+        .scoreboard {
+          font-size: 0.8em;
+        }
+        .explanation {
+          font-size: 0.8em;
+        }
       }
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
     </style>
@@ -125,7 +195,16 @@
     />
   </head>
   <body>
-    <div class="container">
+    <div id="start-screen">
+      <h1>Welcome to Data Detective</h1>
+      <p class="description">
+        Solve patterns, answer fun questions, and become the ultimate Data
+        Detective!
+      </p>
+      <button class="btn" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div class="container" id="quiz-container">
       <h1>Data Detective: Retro Patterns</h1>
       <p class="description">
         Analyze the sequence, find the pattern, and guess what comes next! But
@@ -156,6 +235,14 @@
     </div>
 
     <script>
+      const startScreen = document.getElementById("start-screen");
+      const quizContainer = document.getElementById("quiz-container");
+
+      function startQuiz() {
+        startScreen.style.display = "none";
+        quizContainer.style.display = "block";
+        loadChallenge();
+      }
       const challenges = [
         {
           type: "pattern",
@@ -184,13 +271,20 @@
         },
         {
           type: "fun",
-          question: "What did Anthony miss?",
+          question:
+            "Which of the following is an example of quantitative data?",
           pattern: "",
-          options: ["Sweater", "Being Held", "My Body", "Naubos yung amoy"],
-          correct: 2,
+          options: [
+            "Height of students",
+            "Names of students",
+            "Colors of shirts",
+            "Types of plants",
+          ],
+          correct: 0,
           explanation:
-            "These are the lyrics for the hit song Sweater Memories by Maris Racal.",
+            "Quantitative data refers to numerical values that can be measured. 'Height of students' is a numerical measurement.",
         },
+
         {
           type: "fun",
           question:
@@ -199,7 +293,7 @@
           options: [
             "Professors at Partido State University",
             "They all teach the same subject",
-            "KALBO",
+            "They are teaching in the College of Education",
             "None of the above",
           ],
           correct: 0,
@@ -305,8 +399,6 @@
         explanationEl.textContent = "";
         nextBtn.style.display = "none";
       }
-
-      loadChallenge();
     </script>
   </body>
 </html>
