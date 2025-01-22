@@ -228,7 +228,7 @@
       </div>
 
       <div class="scoreboard">
-        <p>Score: <span id="score">0</span> / 10</p>
+        <p>Score: <span id="score">0</span> / 20</p>
       </div>
 
       <div class="explanation" id="explanation"></div>
@@ -345,10 +345,110 @@
           correct: 0,
           explanation: "The pattern multiplies by 3 each time.",
         },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "2, 3, 5, 7, 11, ?",
+          options: ["12", "13", "15", "14"],
+          correct: 1,
+          explanation: "This is the sequence of prime numbers.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "Red, Orange, Yellow, Green, ?",
+          options: ["Blue", "Indigo", "Violet", "Purple"],
+          correct: 0,
+          explanation: "This is the sequence of colors in a rainbow.",
+        },
+        {
+          type: "fun",
+          question: "Which of the following is an example of nominal data?",
+          pattern: "",
+          options: [
+            "Types of cars",
+            "Number of cars",
+            "Car speeds",
+            "Car prices",
+          ],
+          correct: 0,
+          explanation:
+            "Nominal data categorizes items. 'Types of cars' is a categorical variable.",
+        },
+        {
+          type: "fun",
+          question:
+            "A dataset contains the following entries: 3, 5, 7, 2. What is the mean?",
+          pattern: "",
+          options: ["3", "4.25", "5", "4"],
+          correct: 1,
+          explanation: "The mean is calculated as (3+5+7+2)/4 = 4.25.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "Square, Circle, Triangle, ?",
+          options: ["Rectangle", "Polygon", "Oval", "Hexagon"],
+          correct: 0,
+          explanation:
+            "This pattern alternates between basic geometric shapes.",
+        },
+        {
+          type: "fun",
+          question:
+            "In a survey, data collected includes the types of beverages people prefer. What type of data is this?",
+          pattern: "",
+          options: ["Quantitative", "Qualitative", "Ordinal", "Interval"],
+          correct: 1,
+          explanation:
+            "Preference data is qualitative, as it categorizes people's choices.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "Apple, Banana, Cherry, ?",
+          options: ["Date", "Grape", "Mango", "Peach"],
+          correct: 1,
+          explanation:
+            "The pattern follows alphabetical order of fruits starting with vowels.",
+        },
+        {
+          type: "fun",
+          question: "Which of these is an example of ordinal data?",
+          pattern: "",
+          options: [
+            "Ranking of students",
+            "Height of students",
+            "Grades in exams",
+            "Names of students",
+          ],
+          correct: 0,
+          explanation:
+            "Ordinal data represents ordered categories like rankings.",
+        },
+        {
+          type: "fun",
+          question: "What is the median of this dataset: 3, 5, 9, 2, 6?",
+          pattern: "",
+          options: ["5", "6", "9", "3"],
+          correct: 0,
+          explanation:
+            "The median is the middle value when the data is sorted: 2, 3, 5, 6, 9.",
+        },
+        {
+          type: "pattern",
+          question: "What comes next in the pattern?",
+          pattern: "North, South, East, ?",
+          options: ["West", "Up", "Down", "Left"],
+          correct: 0,
+          explanation:
+            "The pattern follows cardinal directions: North, South, East, and West.",
+        },
       ];
 
       let currentChallenge = 0;
       let score = 0;
+      let answered = false; // New variable to prevent multiple scoring
 
       const questionEl = document.getElementById("question");
       const patternEl = document.getElementById("pattern");
@@ -358,6 +458,7 @@
       const explanationEl = document.getElementById("explanation");
 
       function loadChallenge() {
+        answered = false; // Reset answered status for each question
         const challenge = challenges[currentChallenge];
         questionEl.textContent = challenge.question;
         patternEl.textContent = challenge.pattern || "";
@@ -373,6 +474,8 @@
       }
 
       function checkAnswer(selected) {
+        if (answered) return; // Prevent multiple scoring
+        answered = true; // Mark question as answered
         const challenge = challenges[currentChallenge];
         if (selected === challenge.correct) {
           score++;
