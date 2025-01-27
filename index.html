@@ -185,22 +185,93 @@
           font-size: 0.8em;
         }
         .form-input {
-          width: 90%;
-          padding: 10px;
-          margin: 10px 0;
-          border-radius: 5px;
-          border: 2px solid #ffcc00;
-          background-color: #222222;
-          color: #ffffff;
-          font-family: "Press Start 2P", cursive, sans-serif;
+          width: 80%;
+          padding: 12px 20px;
+          margin: 15px 0;
+          border-radius: 8px;
+          border: 3px solid #ffcc00;
+          background-color: #000000;
+          color: #00ff00;
+          font-family: "Press Start 2P", cursive;
+          font-size: 0.9em;
+          text-align: center;
+          text-transform: uppercase;
+          box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+          transition: all 0.3s ease;
         }
-
+        .form-input::placeholder {
+          color: #666666;
+          opacity: 1;
+        }
+        .form-input:focus {
+          outline: none;
+          border-color: #00ff00;
+          box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        #display-score {
+          color: #ffcc00;
+          text-shadow: 0 0 10px #ff0000;
+          animation: glow 1s ease-in-out infinite alternate;
+        }
         #score-form {
           display: none; /* Hidden initially */
         }
-
         .hidden {
           display: none;
+        }
+        .retro-input {
+          width: 80%;
+          padding: 15px 20px;
+          margin: 15px 0;
+          border-radius: 8px;
+          border: 3px solid #ffcc00;
+          background-color: #000000;
+          color: #00ff00;
+          font-family: "Press Start 2P", cursive;
+          font-size: 0.8em;
+          text-align: center;
+          text-transform: uppercase;
+          box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+          transition: all 0.3s ease;
+        }
+
+        .retro-input::placeholder {
+          color: #666666;
+          letter-spacing: 2px;
+        }
+
+        .retro-input:focus {
+          outline: none;
+          border-color: #00ff00;
+          box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Music controls */
+        #music-control {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          padding: 10px 15px;
+          font-size: 0.7em;
+          background: #ffcc00;
+          color: #000;
+          border: 2px solid #ff0000;
+          border-radius: 8px;
+          cursor: pointer;
+          z-index: 100;
+        }
+
+        #music-control:hover {
+          background: #ff0000;
+          color: #ffcc00;
+        }
+        @keyframes glow {
+          from {
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
+          }
+          to {
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+          }
         }
       }
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
@@ -252,8 +323,21 @@
       <div class="explanation" id="explanation"></div>
     </div>
 
+    <!-- Add this to your HTML (score-form section) -->
     <div class="container" id="score-form" style="display: none">
-      <h1>Submit Your Score</h1>
+      <h1>Game Over!</h1>
+      <div class="arcade-frame" style="margin: 20px auto">
+        <h2 style="color: #00ff00; text-shadow: 0 0 5px #00ff00">
+          FINAL SCORE
+        </h2>
+        <div
+          class="pattern"
+          style="font-size: 2.5em; color: #ff0000; margin: 15px 0"
+        >
+          <span id="display-score">0</span>/20
+        </div>
+      </div>
+
       <form
         id="scoreSubmissionForm"
         action="https://api.web3forms.com/submit"
@@ -266,20 +350,15 @@
         />
         <input type="hidden" id="finalScore" name="score" />
         <div class="arcade-frame">
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            required
-            class="form-input"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            class="form-input"
-          />
+          <div class="retro-input-container">
+            <input
+              type="text"
+              name="name"
+              placeholder="ENTER YOUR NAME"
+              required
+              class="retro-input"
+            />
+          </div>
           <input
             type="checkbox"
             name="botcheck"
@@ -287,9 +366,17 @@
             style="display: none"
           />
         </div>
-        <button type="submit" class="btn">Send Score</button>
+        <button type="submit" class="btn" style="margin-top: 25px">
+          SUBMIT SCORE
+        </button>
       </form>
     </div>
+
+    <!-- Audio -->
+    <audio id="bg-music" loop>
+      <source src="music/BG-Music.mp3" type="audio/mpeg" />
+    </audio>
+    <div id="music-control" class="btn" onclick="toggleMute()">🔊 MUTE</div>
     <script src="scripts.js"></script>
   </body>
 </html>

@@ -5,7 +5,13 @@ function startQuiz() {
   startScreen.style.display = "none";
   quizContainer.style.display = "block";
   loadChallenge();
+  bgMusic.volume = 0.25;
+  bgMusic.play().catch(() => {
+    // Handle autoplay restrictions
+    document.getElementById("music-control").style.display = "block";
+  });
 }
+
 const challenges = [
   {
     type: "pattern",
@@ -164,7 +170,7 @@ const challenges = [
     question: "What comes next in the pattern?",
     pattern: "Apple, Banana, Cherry, ?",
     options: ["Date", "Grape", "Mango", "Peach"],
-    correct: 1,
+    correct: 0,
     explanation:
       "The pattern follows alphabetical order of fruits starting with vowels.",
   },
@@ -264,28 +270,22 @@ function endGame() {
 function showScoreForm() {
   document.getElementById("quiz-container").style.display = "none";
   document.getElementById("score-form").style.display = "block";
-  document.getElementById("finalScore").value =
-    document.getElementById("score").innerText;
+  const finalScore = document.getElementById("score").innerText;
+  document.getElementById("finalScore").value = finalScore;
+  document.getElementById("display-score").textContent = finalScore;
 }
 
-document
-  .getElementById("scoreSubmissionForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    fetch(event.target.action, {
-      method: "POST",
-      body: new URLSearchParams(new FormData(event.target)),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Score submitted successfully!");
-        } else {
-          alert("Failed to submit score. Please try again.");
-        }
-      })
-      .catch((error) => {
-        alert(
-          "Error submitting score. Please check your connection and try again."
-        );
-      });
-  });
+// BG Music
+const bgMusic = document.getElementById("bg-music");
+let isMuted = false;
+
+function toggleMute() {
+  isMuted = !isMuted;
+  bgMusic.muted = isMuted;
+  document.getElementById("music-control").textContent = isMuted
+    ? "🔇 UNMUTE"
+    : "🔊 VOLUME: 25%";
+  if (!isMuted) {
+    bgMusic.volume = 0.25;
+  }
+}
